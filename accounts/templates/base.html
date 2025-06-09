@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}MDDI  JCC Chatbot{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to MDDI JCC Chatbot</h1>
+    </header>
+
+    <main>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+            <a href="{% url 'login' %}">Log in</a> /
+            <a href="{% url 'signup' %}">Sign up</a>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>
