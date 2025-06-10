@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(+%m*4_3y)6y&etu%-m7*3*wku81paypf^16m8=l)y+x@f0qso
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mddi-jcc-chatbot.onrender.com']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'navbar',
+    'chatbot_ui',
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,17 @@ DATABASES = {
     }
 }
 
+#BIGQUERY_DATASET = 'mddi_chatbot'
+#BIGQUERY_TABLE = 'chatbot_messages'
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'google_cloud_bigquery_django',
+#        'PROJECT': 'your-project-id',
+#        'LOCATION': 'US',  # or your preferred location
+#        'DATASET': 'your_dataset_name',
+#        'CREDENTIALS': 'path/to/your/service-account-key.json',
+#    }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

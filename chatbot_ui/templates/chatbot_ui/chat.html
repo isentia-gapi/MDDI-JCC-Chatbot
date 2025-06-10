@@ -1,0 +1,78 @@
+{% extends 'navbar/navbar.html' %}
+{% block content %}
+<div class="chat-container">
+    <div id="chat-messages" class="chat-messages">
+        {% for message in messages %}
+            <div class="message {% if message.is_user %}user-message{% else %}bot-message{% endif %}">
+                {{ message.content }}
+            </div>
+        {% endfor %}
+    </div>
+    <form id="chat-form" class="chat-form">
+        <input type="text" id="user-input" placeholder="Type your message here..." required>
+        <button type="submit" id="send-button">Send</button>
+    </form>
+    <div id="loading-message" class="loading-message" style="display: none;">Loading...</div>
+</div>
+
+<script>
+async function sendMessage(message, conversationId) {
+    const response = await fetch("{% url 'send_message' %}", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: JSON.stringify({
+            message: message,
+            conversation_id: conversationId
+        })
+    });
+    return await response.json();
+}
+
+async function loadConversation(conversationId) {
+    const response = await fetch(`/chat/get_conversation/${conversationId}/`);
+    return await response.json();
+}
+
+// Example usage for sending a message:
+document.getElementById('chat-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const input = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const loadingMessage = document.getElementById('loading-message');
+    const message = input.value.trim();
+    if (!message) return;
+
+    // Display user message
+    const chatMessages = document.getElementById('chat-messages');
+    chatMessages.innerHTML += `<div class="message user-message">${message}</div>`;
+    input.value = '';
+
+    // Disable send button and show loading message
+    sendButton.disabled = true;
+    loadingMessage.style.display = 'block';
+
+    // Send to backend
+    const data = await sendMessage(message, '{{ conversation.id|default:"" }}');
+
+    // Hide loading message and enable send button
+    loadingMessage.style.display = 'none';
+    sendButton.disabled = false;
+
+    // Display bot reply
+    chatMessages.innerHTML += `<div class="message bot-message">${data.reply}</div>`;
+});
+
+// Example usage for loading a conversation:
+async function showConversation(conversationId) {
+    const data = await loadConversation(conversationId);
+    const chatMessages = document.getElementById('chat-messages');
+    chatMessages.innerHTML = '';
+    data.messages.forEach(msg => {
+        chatMessages.innerHTML += `<div class="message ${msg.is_user ? 'user-message' : 'bot-message'}">${msg.content}</div>`;
+    });
+}
+</script>
+{% endblock %}
