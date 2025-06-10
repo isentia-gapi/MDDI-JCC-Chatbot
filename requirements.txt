@@ -41,6 +41,8 @@ fastjsonschema
 flake8
 fonttools
 future
+google-cloud-bigquery
+google-cloud-bigquery-django
 gunicorn
 html5lib
 humanize
