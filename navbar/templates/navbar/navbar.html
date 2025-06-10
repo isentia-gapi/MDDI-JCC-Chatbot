@@ -64,6 +64,34 @@
                 {% endif %}
             </li>
 
+            <!-- Conversation History -->
+            {% if user.is_authenticated %}
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                Conversations
+            </div>
+
+            <!-- New Conversation Button -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="newConversationBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>New Conversation</span>
+                </a>
+            </li>
+
+            <!-- Conversation List -->
+            <div id="conversationList" class="sidebar-conversations">
+                {% for conversation in conversations %}
+                <li class="nav-item">
+                    <a class="nav-link conversation-link" href="#" data-conversation-id="{{ conversation.id }}">
+                        <i class="fas fa-comments"></i>
+                        <span>{{ conversation.title }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             <!-- Divider -->
             {% if user.is_authenticated %}
             <hr class="sidebar-divider">
