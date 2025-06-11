@@ -1,0 +1,77 @@
+{% extends 'navbar/navbar.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h1 class="display-4">Welcome to MDDI Insights Assistant</h1>
+                <p class="lead">Your AI-powered assistant for analyzing daily news reports and uncovering key insights.</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-chart-line"></i> Key Features</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-check text-success"></i> Analyze trends and narratives</li>
+                                <li><i class="fas fa-check text-success"></i> Get media strategy insights</li>
+                                <li><i class="fas fa-check text-success"></i> Track emerging topics</li>
+                                <li><i class="fas fa-check text-success"></i> Save conversation history</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-lightbulb"></i> Quick Start</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-arrow-right text-primary"></i> Start a new conversation</li>
+                                <li><i class="fas fa-arrow-right text-primary"></i> Ask about specific topics</li>
+                                <li><i class="fas fa-arrow-right text-primary"></i> Get instant insights</li>
+                                <li><i class="fas fa-arrow-right text-primary"></i> Save important findings</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'new_conversation' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-comments"></i> Start New Conversation
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login to Get Started
+                    </a>
+                {% endif %}
+            </div>
+
+            <div class="mt-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-info-circle"></i> About MDDI Insights Assistant</h5>
+                        <p class="card-text">
+                            MDDI Insights Assistant is designed to help you analyze Isentia's Daily News Reports, 
+                            uncovering key topics, emerging trends, and insightful narratives. Our AI-powered assistant 
+                            provides quick and accurate insights to support your media strategy and decision-making.
+                        </p>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                For support or questions, please contact:<br>
+                                arun.elangovan@isentia.com<br>
+                                rommel.urbano@isentia.com
+                            </small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

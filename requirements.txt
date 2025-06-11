@@ -79,6 +79,7 @@ notebook
 notebook-shim
 numpy
 numpy-financial
+openai
 openpyxl
 oscrypto
 packaging
@@ -106,6 +107,7 @@ pyproj
 pyrsistent
 python-bidi
 python-dateutil
+python-dotenv
 python-igraph
 python-louvain
 pytz
