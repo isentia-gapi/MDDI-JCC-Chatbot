@@ -16,14 +16,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
-from django.shortcuts import redirect
-
-def home(request):
-    return redirect('accounts/login')
+from chatbot_ui import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', views.home, name='home'),
     path('admin/', admin.site.urls),
-    path('accounts/', include("accounts.urls")),
+    path('accounts/', include('accounts.urls')),
     path('chat/', include('chatbot_ui.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

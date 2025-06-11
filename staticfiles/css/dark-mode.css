@@ -1,0 +1,98 @@
+/* Dark mode styles */
+html[data-theme="dark"] {
+    --body-bg: #1a1a1a;
+    --text-color: #ffffff;
+    --sidebar-bg: #2d2d2d;
+    --sidebar-text: #ffffff;
+    --navbar-bg: #2d2d2d;
+    --navbar-text: #ffffff;
+    --card-bg: #2d2d2d;
+    --border-color: #404040;
+    --input-bg: #404040;
+    --input-text: #ffffff;
+    --footer-bg: #2d2d2d;
+    --footer-text: #ffffff;
+}
+
+html[data-theme="dark"] body {
+    background-color: var(--body-bg);
+    color: var(--text-color);
+}
+
+html[data-theme="dark"] .sidebar {
+    background-color: var(--sidebar-bg) !important;
+    color: var(--sidebar-text);
+}
+
+html[data-theme="dark"] .navbar {
+    background-color: var(--navbar-bg) !important;
+    color: var(--navbar-text);
+}
+
+html[data-theme="dark"] .card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .form-control {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+}
+
+/* Theme toggle button styles */
+.theme-toggle {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+}
+
+.theme-toggle:hover {
+    opacity: 0.8;
+}
+
+/* Dark mode specific styles for the chat interface */
+html[data-theme="dark"] .msger {
+    background-color: var(--card-bg);
+}
+
+html[data-theme="dark"] .msger-header {
+    background-color: var(--navbar-bg);
+    color: var(--navbar-text);
+}
+
+html[data-theme="dark"] .msger-inputarea {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+html[data-theme="dark"] .msger-input {
+    background-color: var(--input-bg);
+    color: var(--input-text);
+}
+
+html[data-theme="dark"] .msger-send-btn {
+    background-color: #0c6e56;
+}
+
+html[data-theme="dark"] .msger-send-btn:hover {
+    background-color: #0a5a47;
+}
+
+html[data-theme="dark"] .msger-send-sample {
+    background-color: var(--input-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+html[data-theme="dark"] .msger-send-sample:hover {
+    background-color: #404040;
+} 

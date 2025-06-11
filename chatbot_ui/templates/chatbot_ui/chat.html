@@ -1,78 +1,138 @@
 {% extends 'navbar/navbar.html' %}
+{% load static %}
+
 {% block content %}
-<div class="chat-container">
-    <div id="chat-messages" class="chat-messages">
+<section class="msger">
+    <header class="msger-header">
+        <div class="msger-header-title">
+            <i class="fas fa-comment-alt"></i> MDDI Insights Assistant
+        </div>
+        <div class="msger-header-options">
+        </div>
+    </header>
+
+    <main class="msger-chat">
         {% for message in messages %}
-            <div class="message {% if message.is_user %}user-message{% else %}bot-message{% endif %}">
-                {{ message.content }}
+        <div class="msg {% if message.is_user %}right-msg{% else %}left-msg{% endif %}">
+            <div class="msg-img" style="background-image: url({% if message.is_user %}{% if user.profile.profile_picture and user.profile.profile_picture.url %}{{ user.profile.profile_picture.url }}{% else %}https://github.com/isentia-gapi/Rommel-DSH-Collats/blob/main/MDDI_LOGO_RGB_resize_crop.png?raw=true{% endif %}{% else %}https://github.com/isentia-gapi/Rommel-DSH-Collats/blob/main/Isentia-Logo_Black.png?raw=true{% endif %})"></div>
+            <div class="msg-bubble">
+                <div class="msg-info">
+                    <div class="msg-info-name">{% if message.is_user %}{{ user.username }}{% else %}Insights Assistant{% endif %}</div>
+                    <div class="msg-info-time">{{ message.timestamp|date:"Y-m-d H:i:s" }}</div>
+                </div>
+                <div class="msg-text">{{ message.content|safe }}</div>
             </div>
+        </div>
         {% endfor %}
+    </main>
+
+    <div class="main">
+        <button class="msger-send-sample" onclick="sample1()">What are the key trends or narratives around [insert topic] in the latest reports?</button>
+        <button class="msger-send-sample" onclick="sample4()">My client is in the [insert industry] space — what insights from the reports can support their media strategy?</button>
     </div>
-    <form id="chat-form" class="chat-form">
-        <input type="text" id="user-input" placeholder="Type your message here..." required>
-        <button type="submit" id="send-button">Send</button>
+
+    <form class="msger-inputarea" id="chat-form">
+        <textarea oninput="auto_grow(this)" rows="1" id="user-input" class="msger-input" placeholder="Enter your message..."></textarea>
+        <button type="submit" id="send-button" class="msger-send-btn">Send</button>
     </form>
-    <div id="loading-message" class="loading-message" style="display: none;">Loading...</div>
-</div>
+</section>
 
 <script>
-async function sendMessage(message, conversationId) {
-    const response = await fetch("{% url 'send_message' %}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: JSON.stringify({
-            message: message,
-            conversation_id: conversationId
-        })
-    });
-    return await response.json();
+const BOT_IMG = "https://github.com/isentia-gapi/Rommel-DSH-Collats/blob/main/Isentia-Logo_Black.png?raw=true";
+const PERSON_IMG = "{% if user.profile.profile_picture and user.profile.profile_picture.url %}{{ user.profile.profile_picture.url }}{% else %}https://github.com/isentia-gapi/Rommel-DSH-Collats/blob/main/MDDI_LOGO_RGB_resize_crop.png?raw=true{% endif %}";
+const BOT_NAME = "Insights Assistant";
+const PERSON_NAME = "{{ user.username }}";
+
+function auto_grow(element) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight) + "px";
 }
 
-async function loadConversation(conversationId) {
-    const response = await fetch(`/chat/get_conversation/${conversationId}/`);
-    return await response.json();
+function sample1() {
+    const input = document.getElementById('user-input');
+    input.value = "What are the key trends or narratives around [insert topic] in the latest reports?";
+    auto_grow(input);
 }
 
-// Example usage for sending a message:
+function sample4() {
+    const input = document.getElementById('user-input');
+    input.value = "My client is in the [insert industry] space — what insights from the reports can support their media strategy?";
+    auto_grow(input);
+}
+
+function appendMessage(name, img, side, text) {
+    const msgerChat = document.querySelector('.msger-chat');
+    const msgHTML = `
+        <div class="msg ${side}-msg">
+            <div class="msg-img" style="background-image: url(${img})"></div>
+            <div class="msg-bubble">
+                <div class="msg-info">
+                    <div class="msg-info-name">${name}</div>
+                    <div class="msg-info-time">${new Date().toISOString().split('.')[0].replace('T', ' ')}</div>
+                </div>
+                <div class="msg-text">${text}</div>
+            </div>
+        </div>
+    `;
+    msgerChat.insertAdjacentHTML("beforeend", msgHTML);
+    msgerChat.scrollTop += 500;
+}
+
 document.getElementById('chat-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const input = document.getElementById('user-input');
     const sendButton = document.getElementById('send-button');
-    const loadingMessage = document.getElementById('loading-message');
     const message = input.value.trim();
+    
     if (!message) return;
 
     // Display user message
-    const chatMessages = document.getElementById('chat-messages');
-    chatMessages.innerHTML += `<div class="message user-message">${message}</div>`;
-    input.value = '';
+    appendMessage(PERSON_NAME, PERSON_IMG, "right", message);
+    input.value = "";
+    input.style.height = "5px";
 
-    // Disable send button and show loading message
+    // Disable send button
     sendButton.disabled = true;
-    loadingMessage.style.display = 'block';
 
-    // Send to backend
-    const data = await sendMessage(message, '{{ conversation.id|default:"" }}');
+    // Show loading message
+    appendMessage(BOT_NAME, BOT_IMG, "left", "Analyzing your request...");
 
-    // Hide loading message and enable send button
-    loadingMessage.style.display = 'none';
-    sendButton.disabled = false;
+    try {
+        const response = await fetch("{% url 'send_message' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({
+                message: message,
+                conversation_id: "{{ conversation.id|default:'' }}"
+            })
+        });
 
-    // Display bot reply
-    chatMessages.innerHTML += `<div class="message bot-message">${data.reply}</div>`;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Remove loading message
+        const msgerChat = document.querySelector('.msger-chat');
+        msgerChat.removeChild(msgerChat.lastChild);
+
+        if (data.error) {
+            appendMessage(BOT_NAME, BOT_IMG, "left", `Error: ${data.error}`);
+        } else {
+            appendMessage(BOT_NAME, BOT_IMG, "left", data.reply);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        const msgerChat = document.querySelector('.msger-chat');
+        msgerChat.removeChild(msgerChat.lastChild);
+        appendMessage(BOT_NAME, BOT_IMG, "left", "Sorry, I encountered an error. Please try again.");
+    } finally {
+        sendButton.disabled = false;
+    }
 });
-
-// Example usage for loading a conversation:
-async function showConversation(conversationId) {
-    const data = await loadConversation(conversationId);
-    const chatMessages = document.getElementById('chat-messages');
-    chatMessages.innerHTML = '';
-    data.messages.forEach(msg => {
-        chatMessages.innerHTML += `<div class="message ${msg.is_user ? 'user-message' : 'bot-message'}">${msg.content}</div>`;
-    });
-}
 </script>
 {% endblock %}

@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +29,7 @@ SECRET_KEY = 'django-insecure-(+%m*4_3y)6y&etu%-m7*3*wku81paypf^16m8=l)y+x@f0qso
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mddi-jcc-chatbot.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'mddi-jcc-chatbot.onrender.com']
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -69,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'chatbot_ui.context_processors.conversations',
             ],
         },
     },
@@ -86,18 +90,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-#BIGQUERY_DATASET = 'mddi_chatbot'
-#BIGQUERY_TABLE = 'chatbot_messages'
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'google_cloud_bigquery_django',
-#        'PROJECT': 'your-project-id',
-#        'LOCATION': 'US',  # or your preferred location
-#        'DATASET': 'your_dataset_name',
-#        'CREDENTIALS': 'path/to/your/service-account-key.json',
-#    }
-#}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -139,7 +131,13 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = '/static/'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Add this to your settings
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
